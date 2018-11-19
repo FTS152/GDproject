@@ -46,6 +46,7 @@ public class fighterScript : MonoBehaviour {
 	[Tooltip("distance between following friends")]public float minDistanceBetweenFriends;
 	[Tooltip("position, where fighter will go and than go back")]public Vector3 patrolPosition;
 	[Tooltip("how long will fighter stay at patrol position")]public float waitAtPosition;
+	[Tooltip("reference to a hitbox")]public Animator hitbox;
 
 
 	[HideInInspector] public bool underControl; // shows if player is controling this fighter
@@ -144,16 +145,24 @@ public class fighterScript : MonoBehaviour {
 				rb.velocity = new Vector2 (rb.velocity.x / speed, y) * speed; // applies vertical movement
 				if (rb.velocity == Vector2.zero) { // checks if fighter is standing
 					an.SetInteger ("movingState", 0); // sets idle animation
+					if(hitbox != null){
+						hitbox.SetInteger ("movingState", 0);
+					}
+
 					CancelInvoke ("run"); // disables invoking run animation
 					invoked = false;
 				} else { // if fighter is moving
 					if (!invoked) { // checks if invoke is not called yet
 						an.SetInteger ("movingState", 1);
+						if(hitbox != null){
+							hitbox.SetInteger ("movingState", 1);
+						}
 						Invoke ("run", timeBeforeRun); // invokes run animation
 						invoked = true;
 					}
 				}
-			} 
+			}
+			/* 
 				if (x < 0) { // checks if moving left
 					k = -1; // changes line of sight to left
 					transform.rotation = Quaternion.Euler (transform.rotation.x, -180, transform.rotation.z); // rotates gameObject to left
@@ -161,6 +170,7 @@ public class fighterScript : MonoBehaviour {
 					k = 1; // changes line of sight to right
 					transform.rotation = Quaternion.Euler (transform.rotation.x, 0, transform.rotation.z); // rotates gameObject to right
 				}
+			*/
 		}
 	}
 
@@ -389,8 +399,12 @@ public class fighterScript : MonoBehaviour {
 	void hit () // punch
 	{
 		an.SetInteger ("movingState", 4); // sets the transition animation state
-		int randomHit = Random.Range (0, numberOfHits); // selects random hit animation
+		int randomHit = Random.Range (1, numberOfHits+1); // selects random hit animation
 		an.SetInteger ("fightState", randomHit); // enables proper hit animation
+		if(hitbox != null){
+			hitbox.SetInteger ("movingState", 4);
+			hitbox.SetInteger ("fightState", randomHit); // enables proper hit animation
+		}
 
 		RaycastHit2D[] enemies = Physics2D.RaycastAll(transform.position + center + new Vector3 (hitRaycastOffset.x * k, hitRaycastOffset.y, 0), Vector2.up, hitRaycastLenght, enemyLayer); // checks for a receiver of a punch
 		if (enemies.Length > 0) // if there are receivers of a punch
@@ -462,7 +476,7 @@ public class fighterScript : MonoBehaviour {
 		rb.velocity = Vector2.zero; // stops fighter 
 		CancelInvoke ("run");
 		setHittedMaterial (); // sets red color
-		if (!superPunch && health > damage) { // receive simple attack
+		if (health > damage) { // receive simple attack
 			changeAnimatorState ("getAttackedState", 1); // set get attacked animation
 			StartCoroutine ("getDemobilized", hitTime); // get demobilized
 		} else // receive super punch
