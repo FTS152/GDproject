@@ -8,6 +8,7 @@ public class fighterScript : MonoBehaviour {
 	[Space(20)]
 	[Header("Fighter settings")]
 
+    [Tooltip("member of player team")] public GameObject[] member;
 	[Tooltip("health points at the start")] public float health;
 	[Tooltip("movement speed")] public float speed;
 	[Tooltip("hit damage")] public float damage;
@@ -162,15 +163,22 @@ public class fighterScript : MonoBehaviour {
 					}
 				}
 			}
-			/* 
-				if (x < 0) { // checks if moving left
-					k = -1; // changes line of sight to left
-					transform.rotation = Quaternion.Euler (transform.rotation.x, -180, transform.rotation.z); // rotates gameObject to left
-				} else if (x > 0) { // checks if moving right
-					k = 1; // changes line of sight to right
-					transform.rotation = Quaternion.Euler (transform.rotation.x, 0, transform.rotation.z); // rotates gameObject to right
-				}
-			*/
+			
+		    if (x < 0) { // checks if moving left
+				k = -1; // changes line of sight to left
+				transform.rotation = Quaternion.Euler (transform.rotation.x, -180, transform.rotation.z); // rotates gameObject to left
+                for(int i=0; i<member.Length; i++){
+                    member[i].transform.rotation = Quaternion.Euler(transform.rotation.x, -180, transform.rotation.z);
+                }
+			} else if (x > 0) { // checks if moving right
+				k = 1; // changes line of sight to right
+				transform.rotation = Quaternion.Euler (transform.rotation.x, 0, transform.rotation.z); // rotates gameObject to right
+                for (int i = 0; i < member.Length; i++)
+                {
+                    member[i].transform.rotation = Quaternion.Euler(transform.rotation.x, 0, transform.rotation.z);
+                }
+            }
+			
 		}
 	}
 

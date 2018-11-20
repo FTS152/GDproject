@@ -35,13 +35,15 @@ public class cameraBehaviour : MonoBehaviour {
 
 	void followPlayer () 
 	{
-		rb.MovePosition(Vector2.MoveTowards (transform.position, player.position, cameraSpeed)); // moves forward player's position
+        Vector3 fixedPlayerPos = player.position;
+        fixedPlayerPos.y -= 100;
+        rb.MovePosition(Vector2.MoveTowards (transform.position, fixedPlayerPos, cameraSpeed)); // moves forward player's position
 	}
 
 	void resizeCameraPhysics () 
 	{
 		if (GetComponent<BoxCollider2D> ()) {
-			GetComponent<BoxCollider2D> ().size = new Vector2 (Camera.main.orthographicSize * Camera.main.aspect, Camera.main.orthographicSize) * 2;
+			GetComponent<BoxCollider2D> ().size = new Vector2 (Camera.main.orthographicSize * Camera.main.aspect, Camera.main.orthographicSize-60) * 2;
 		}
 	}
 

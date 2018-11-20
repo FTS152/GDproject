@@ -85,7 +85,7 @@ public class GameManager: MonoBehaviour {
         {
             inGameMenu.SetActive(false);
 			inGameMenuButton.GetComponent<Image>().sprite = inGameMenuButtonSprites[0];
-			gpm.switchGameButtons(true);
+			//gpm.switchGameButtons(true);
 		}
     }
 
