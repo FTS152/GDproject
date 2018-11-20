@@ -10,7 +10,6 @@ public class skillManager : MonoBehaviour {
     [Tooltip("Skill Animation Prefab")] public GameObject[] skillAnimation;
 
     GameObject tmpSkill;
-    float time;
 
     enum skillType
     {
@@ -21,12 +20,12 @@ public class skillManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        time = 0;
+        
     }
 	
 	// Update is called once per frame
 	void Update () {
-        time += Time.deltaTime;
+        
 	}
 
     public void useSkill(int type)
@@ -50,6 +49,7 @@ public class skillManager : MonoBehaviour {
         Vector3 fixedLeaderPos = leader.transform.position;
         fixedLeaderPos.x += 20;
         tmpSkill = Instantiate(skillAnimation[0], fixedLeaderPos, Quaternion.identity);
+        Destroy(tmpSkill, 1);
     }
 
     void explosion()
@@ -57,6 +57,7 @@ public class skillManager : MonoBehaviour {
         Vector3 fixedLeaderPos = leader.transform.position;
         fixedLeaderPos.x -= 10;
         tmpSkill = Instantiate(skillAnimation[1], fixedLeaderPos, Quaternion.identity);
+        Destroy(tmpSkill, 1);
     }
 
     void heal()
@@ -65,9 +66,7 @@ public class skillManager : MonoBehaviour {
         fixedLeaderPos.x -= 10;
         fixedLeaderPos.y -= 5;
         tmpSkill = Instantiate(skillAnimation[2], fixedLeaderPos, Quaternion.identity);
-        time = 0;
-        while (time < 1350) {};
-        tmpSkill.SetActive(false);
+        Destroy(tmpSkill, 1);
     }
 
 }
