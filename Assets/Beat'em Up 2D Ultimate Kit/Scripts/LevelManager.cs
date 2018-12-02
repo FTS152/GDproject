@@ -12,13 +12,14 @@ public class LevelManager : MonoBehaviour {
 	public float step;
 	public int rowSize;
 	int stepDown;
+	static string level;
 
 
 	// Use this for initialization
 	void Start () {
 
 		Transform canvas = GameObject.Find ("Canvas").transform;
-
+/*
 		levels = new Level [numberOfLevels]; // creates level buttons array
 		for (int i = 0; i < numberOfLevels; i++) { // fills array with buttons
 			levels [i] = new Level ();
@@ -41,16 +42,16 @@ public class LevelManager : MonoBehaviour {
 			newButton.GetComponent<RectTransform> ().localPosition = pos;
 
 		}
+*/
 	}
 
 	public void loadLevel (string levelName) {
-		for (int i = 0; i < numberOfLevels; i++) {
-			if (levels [i].name == levelName) {
-				if (levels [i].opened) {
-					Application.LoadLevel (levelName);
-				}
-			}
-		}
+		level = levelName;
+		Application.LoadLevel ("charSelect");
+	}
+
+	public void startLevel () {
+		Application.LoadLevel (level);
 	}
 
 	public void levelFinished (int i) {
