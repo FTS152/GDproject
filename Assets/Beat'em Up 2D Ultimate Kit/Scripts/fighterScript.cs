@@ -48,9 +48,11 @@ public class fighterScript : MonoBehaviour {
 	[Tooltip("position, where fighter will go and than go back")]public Vector3 patrolPosition;
 	[Tooltip("how long will fighter stay at patrol position")]public float waitAtPosition;
 	[Tooltip("reference to a hitbox")]public Animator hitbox;
+    [Tooltip("reference to a hitbox1")] public Animator hitbox1;
+    [Tooltip("reference to a hitbox2")] public Animator hitbox2;
 
 
-	[HideInInspector] public bool underControl; // shows if player is controling this fighter
+    [HideInInspector] public bool underControl; // shows if player is controling this fighter
 
 	GameObject closestEnemy; // stores closest enemy
 	GameObject closestFriend; // stores closest friend
@@ -148,7 +150,9 @@ public class fighterScript : MonoBehaviour {
 					an.SetInteger ("movingState", 0); // sets idle animation
 					if(hitbox != null){
 						hitbox.SetInteger ("movingState", 0);
-					}
+                        hitbox1.SetInteger("movingState", 0);
+                        hitbox2.SetInteger("movingState", 0);
+                    }
 
 					CancelInvoke ("run"); // disables invoking run animation
 					invoked = false;
@@ -157,7 +161,9 @@ public class fighterScript : MonoBehaviour {
 						an.SetInteger ("movingState", 1);
 						if(hitbox != null){
 							hitbox.SetInteger ("movingState", 1);
-						}
+                            hitbox1.SetInteger("movingState", 1);
+                            hitbox2.SetInteger("movingState", 1);
+                        }
 						Invoke ("run", timeBeforeRun); // invokes run animation
 						invoked = true;
 					}
@@ -412,7 +418,11 @@ public class fighterScript : MonoBehaviour {
 		if(hitbox != null){
 			hitbox.SetInteger ("movingState", 4);
 			hitbox.SetInteger ("fightState", randomHit); // enables proper hit animation
-		}
+            hitbox1.SetInteger("movingState", 4);
+            hitbox1.SetInteger("fightState", randomHit); // enables proper hit animation
+            hitbox2.SetInteger("movingState", 4);
+            hitbox2.SetInteger("fightState", randomHit); // enables proper hit animation
+        }
 
 		RaycastHit2D[] enemies = Physics2D.RaycastAll(transform.position + center + new Vector3 (hitRaycastOffset.x * k, hitRaycastOffset.y, 0), Vector2.up, hitRaycastLenght, enemyLayer); // checks for a receiver of a punch
 		if (enemies.Length > 0) // if there are receivers of a punch
