@@ -36,6 +36,7 @@ public class GameManager: MonoBehaviour {
 
 	public void loadLevel (string scene) // function loads level
     {
+
         Application.LoadLevel(scene);
     }
 
