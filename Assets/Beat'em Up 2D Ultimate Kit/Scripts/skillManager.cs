@@ -8,7 +8,9 @@ public class skillManager : MonoBehaviour {
     [Tooltip("Player")] public GameObject leader;
     [Tooltip("Skill Card Slots")] public GameObject[] cardSlot;
     [Tooltip("Skill Animation Prefab")] public GameObject[] skillAnimation;
+    [Tooltip("audio clips")] public AudioClip[] audioClips;
 
+    AudioSource aus;
     GameObject tmpSkill;
 
     enum skillType
@@ -21,7 +23,7 @@ public class skillManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        
+        aus = GetComponent<AudioSource>();
     }
 	
 	// Update is called once per frame
@@ -55,6 +57,7 @@ public class skillManager : MonoBehaviour {
         tmpSkill = Instantiate(skillAnimation[0], fixedLeaderPos, Quaternion.identity);
         Destroy(tmpSkill, 1);
         leader.GetComponent<fighterScript>().attack();
+        aus.PlayOneShot(audioClips[0]);
     }
 
     void explosion()
@@ -64,6 +67,7 @@ public class skillManager : MonoBehaviour {
         tmpSkill = Instantiate(skillAnimation[1], fixedLeaderPos, Quaternion.identity);
         Destroy(tmpSkill, 0.8f);
         leader.GetComponent<fighterScript>().attack();
+        aus.PlayOneShot(audioClips[1]);
     }
 
     void heal()
@@ -75,6 +79,7 @@ public class skillManager : MonoBehaviour {
         tmpSkill.transform.parent = leader.transform;
         leader.GetComponent<fighterScript>().applyHealth(20);
         Destroy(tmpSkill, 1);
+        aus.PlayOneShot(audioClips[2]);
     }
 
     void ice()
@@ -98,5 +103,6 @@ public class skillManager : MonoBehaviour {
         tmpSkill = Instantiate(skillAnimation[3], fixedLeaderPos, Quaternion.identity);
         Destroy(tmpSkill, 0.2f);
         leader.GetComponent<fighterScript>().attack();
+        aus.PlayOneShot(audioClips[3]);
     }
 }
