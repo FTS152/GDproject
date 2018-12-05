@@ -51,15 +51,15 @@ public class CutsceneManager : MonoBehaviour {
 
 	IEnumerator playCutscene (Cutscene cutscene) {
 
-		dialogWindow.SetActive (true);
+		/*dialogWindow.SetActive (true);
 
 		for (int i = 0; i < cutscene.dialogs.speaches.Length; i++) {
 			dialogWindow.transform.Find ("Portrait").gameObject.GetComponent<Image>().sprite = cutscene.dialogs.speaches[i].portrait;
-			dialogWindow.transform.Find ("Speach").gameObject.GetComponent<Text>().text = cutscene.dialogs.speaches[i].text;
+			dialogWindow.transform.Find ("Speach").gameObject.GetComponent<Text>().text = cutscene.dialogs.speaches[i].text;*/
 			yield return new WaitForSeconds (1.5f);
-		}
+		/*}
 
-		dialogWindow.SetActive (false);
+		dialogWindow.SetActive (false);*/
 
 		if (cutscene.win) {
 			gpm.win ();

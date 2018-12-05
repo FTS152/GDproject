@@ -15,7 +15,8 @@ public class skillManager : MonoBehaviour {
     {
         dash,
         explosion,
-        heal
+        heal,
+        ice
     }
 
 	// Use this for initialization
@@ -41,6 +42,9 @@ public class skillManager : MonoBehaviour {
             case 2:
                 heal();
                 break;
+            case 3:
+                ice();
+                break;
         }
     }
 
@@ -50,6 +54,7 @@ public class skillManager : MonoBehaviour {
         fixedLeaderPos.x += 20;
         tmpSkill = Instantiate(skillAnimation[0], fixedLeaderPos, Quaternion.identity);
         Destroy(tmpSkill, 1);
+        leader.GetComponent<fighterScript>().attack();
     }
 
     void explosion()
@@ -57,7 +62,8 @@ public class skillManager : MonoBehaviour {
         Vector3 fixedLeaderPos = leader.transform.position;
         fixedLeaderPos.x -= 10;
         tmpSkill = Instantiate(skillAnimation[1], fixedLeaderPos, Quaternion.identity);
-        Destroy(tmpSkill, 1);
+        Destroy(tmpSkill, 0.8f);
+        leader.GetComponent<fighterScript>().attack();
     }
 
     void heal()
@@ -66,7 +72,31 @@ public class skillManager : MonoBehaviour {
         fixedLeaderPos.x -= 10;
         fixedLeaderPos.y -= 5;
         tmpSkill = Instantiate(skillAnimation[2], fixedLeaderPos, Quaternion.identity);
+        tmpSkill.transform.parent = leader.transform;
+        leader.GetComponent<fighterScript>().applyHealth(20);
         Destroy(tmpSkill, 1);
     }
 
+    void ice()
+    {
+        Vector3 fixedLeaderPos = leader.transform.position;
+        fixedLeaderPos.x += 10;
+        tmpSkill = Instantiate(skillAnimation[3], fixedLeaderPos, Quaternion.identity);
+        Destroy(tmpSkill, 0.2f);
+        fixedLeaderPos.x -= 10;
+        fixedLeaderPos.y += 10;
+        tmpSkill = Instantiate(skillAnimation[3], fixedLeaderPos, Quaternion.identity);
+        Destroy(tmpSkill, 0.2f);
+        fixedLeaderPos.y -= 35;
+        tmpSkill = Instantiate(skillAnimation[3], fixedLeaderPos, Quaternion.identity);
+        Destroy(tmpSkill, 0.2f);
+        fixedLeaderPos.x -= 10;
+        fixedLeaderPos.y -= 25;
+        tmpSkill = Instantiate(skillAnimation[3], fixedLeaderPos, Quaternion.identity);
+        Destroy(tmpSkill, 0.2f);
+        fixedLeaderPos.y += 70;
+        tmpSkill = Instantiate(skillAnimation[3], fixedLeaderPos, Quaternion.identity);
+        Destroy(tmpSkill, 0.2f);
+        leader.GetComponent<fighterScript>().attack();
+    }
 }
