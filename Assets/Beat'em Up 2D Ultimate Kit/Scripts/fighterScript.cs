@@ -8,6 +8,7 @@ public class fighterScript : MonoBehaviour {
 	[Space(20)]
 	[Header("Fighter settings")]
 
+    [Tooltip("Number of member")] public int memberNum;
     [Tooltip("member of player team")] public GameObject[] member;
 	[Tooltip("health points at the start")] public float health;
 	[Tooltip("movement speed")] public float speed;
@@ -69,8 +70,9 @@ public class fighterScript : MonoBehaviour {
 	bool demobilized; // shows if fighter is demobilized
 	bool isBlocking; // shows if fighter is blocking
 	Rigidbody2D rb; // fighter's rigidbody
-	Animator an; // animator
-	SpriteRenderer sr; // sprite renderer
+    Animator[] an;
+    Animator anEnemy;
+    SpriteRenderer sr; // sprite renderer
 	AudioSource au;
 	int k; // factor of a sight
 	float floorLevel; // y coordinate of a figter
@@ -122,10 +124,23 @@ public class fighterScript : MonoBehaviour {
 
 	void prepareCharacter () // determinies variables
 	{
-		rb = GetComponent<Rigidbody2D> ();
-		an = GetComponent<Animator>();
-		an.SetInteger ("fightState", -1);
-		au = GetComponent<AudioSource> ();
+        an = new Animator[memberNum];
+        if (memberNum<=0)
+        {
+            anEnemy = GetComponent<Animator>();
+            anEnemy.SetInteger("fightState", -1);
+        }
+        else
+        {
+            for (int i = 0; i < memberNum; i++)
+            {
+                an[i] = this.transform.GetChild(i).GetComponent<Animator>();
+                an[i].SetInteger("fightState", -1);
+            }
+        }
+
+        rb = GetComponent<Rigidbody2D>();
+        au = GetComponent<AudioSource> ();
 		k = 1;
 		rb.gravityScale = 0;
 		startPosition = transform.position;
@@ -147,7 +162,17 @@ public class fighterScript : MonoBehaviour {
 			if (grounded) { // checks if fighter is grounded
 				rb.velocity = new Vector2 (rb.velocity.x / speed, y) * speed; // applies vertical movement
 				if (rb.velocity == Vector2.zero) { // checks if fighter is standing
-					an.SetInteger ("movingState", 0); // sets idle animation
+                    if (memberNum<=0)
+                    {
+                        anEnemy.SetInteger("movingState", 0); // sets idle animation
+                    }
+                    else
+                    {
+                        for (int i = 0; i < memberNum; i++)
+                        {
+                            an[i].SetInteger("movingState", 0); // sets idle animation
+                        }
+                    }
 					if(hitbox != null){
 						hitbox.SetInteger ("movingState", 0);
                         hitbox1.SetInteger("movingState", 0);
@@ -157,9 +182,23 @@ public class fighterScript : MonoBehaviour {
 					CancelInvoke ("run"); // disables invoking run animation
 					invoked = false;
 				} else { // if fighter is moving
+                    if (true)
+                    {
+                        //Debug.Log("!!!!!!");
+                    }
 					if (!invoked) { // checks if invoke is not called yet
-						an.SetInteger ("movingState", 1);
-						if(hitbox != null){
+                        if (memberNum<=0)
+                        {
+                            anEnemy.SetInteger("movingState", 0); // sets idle animation
+                        }
+                        else
+                        {
+                            for (int i = 0; i < memberNum; i++)
+                            {
+                                an[i].SetInteger("movingState", 1); // sets idle animation
+                            }
+                        }
+                        if (hitbox != null){
 							hitbox.SetInteger ("movingState", 1);
                             hitbox1.SetInteger("movingState", 1);
                             hitbox2.SetInteger("movingState", 1);
@@ -172,19 +211,31 @@ public class fighterScript : MonoBehaviour {
 			
 		    if (x < 0) { // checks if moving left
 				k = -1; // changes line of sight to left
-				transform.rotation = Quaternion.Euler (transform.rotation.x, -180, transform.rotation.z); // rotates gameObject to left
-                for(int i=0; i<member.Length; i++){
-                    member[i].transform.rotation = Quaternion.Euler(transform.rotation.x, -180, transform.rotation.z);
+                if (memberNum <= 0)
+                {
+                    transform.rotation = Quaternion.Euler(transform.rotation.x, -180, transform.rotation.z); // rotates gameObject to left
+                }
+                else
+                {
+                    for (int i = 0; i < member.Length; i++)
+                    {
+                        member[i].transform.rotation = Quaternion.Euler(transform.rotation.x, -180, transform.rotation.z);// rotates gameObject to left
+                    }
                 }
 			} else if (x > 0) { // checks if moving right
 				k = 1; // changes line of sight to right
-				transform.rotation = Quaternion.Euler (transform.rotation.x, 0, transform.rotation.z); // rotates gameObject to right
-                for (int i = 0; i < member.Length; i++)
+                if (memberNum <= 0)
                 {
-                    member[i].transform.rotation = Quaternion.Euler(transform.rotation.x, 0, transform.rotation.z);
+                    transform.rotation = Quaternion.Euler(transform.rotation.x, 0, transform.rotation.z); // rotates gameObject to right
+                }
+                else
+                {
+                    for (int i = 0; i < member.Length; i++)
+                    {
+                        member[i].transform.rotation = Quaternion.Euler(transform.rotation.x, 0, transform.rotation.z);// rotates gameObject to right
+                    }
                 }
             }
-			
 		}
 	}
 
@@ -203,14 +254,34 @@ public class fighterScript : MonoBehaviour {
 		grounded = true;
 		if (dead) 
 		{
-			an.SetBool("dead", true); // starts lying animation
+            if (memberNum<=0)
+            {
+                anEnemy.SetBool("dead", true); // starts lying animation
+            }
+            else
+            {
+                for (int i = 0; i < memberNum; i++)
+                {
+                    an[i].SetBool("dead", true); // starts lying animation
+                }
+            }
 			demobilized = true;
 		}
 	}
 
 	void changeAnimatorState(string variable,int i) // changes animator states
 	{
-		an.SetInteger (variable, i);
+        if (memberNum<=0)
+        {
+            anEnemy.SetInteger(variable, i);
+        }
+        else
+        {
+            for (int j = 0; j < memberNum; j++)
+            {
+                an[j].SetInteger(variable, i);
+            }
+        }
 	}
 
 	void checkForEnemy() // checks for enemy around
@@ -361,7 +432,17 @@ public class fighterScript : MonoBehaviour {
 			CancelInvoke ("run");
 			invoked = false;
 			GetComponent<BoxCollider2D> ().enabled = false; // disables collisions
-			an.SetInteger ("movingState", 3);
+            if (memberNum<=0)
+            {
+                anEnemy.SetInteger("movingState", 3);
+            }
+            else
+            {
+                for (int i = 0; i < memberNum; i++)
+                {
+                    an[i].SetInteger("movingState", 3);
+                }
+            }
 		}
 	}
 
@@ -412,9 +493,29 @@ public class fighterScript : MonoBehaviour {
 
 	void hit () // punch
 	{
-		an.SetInteger ("movingState", 4); // sets the transition animation state
+        if (memberNum <= 0)
+        {
+            anEnemy.SetInteger("movingState", 4); // sets the transition animation state
+        }
+        else
+        {
+            for (int i = 0; i < memberNum; i++)
+            {
+                an[i].SetInteger("movingState", 4); // sets the transition animation state
+            }
+        }
 		int randomHit = Random.Range (1, numberOfHits+1); // selects random hit animation
-		an.SetInteger ("fightState", randomHit); // enables proper hit animation
+        if (memberNum<=0)
+        {
+            anEnemy.SetInteger("fightState", randomHit); // enables proper hit animation
+        }
+        else
+        {
+            for (int i = 0; i < memberNum; i++)
+            {
+                an[i].SetInteger("fightState", randomHit); // enables proper hit animation
+            }
+        }
 		if(hitbox != null){
 			hitbox.SetInteger ("movingState", 4);
 			hitbox.SetInteger ("fightState", randomHit); // enables proper hit animation
@@ -446,7 +547,10 @@ public class fighterScript : MonoBehaviour {
 
 	void shoot() // shoot
 	{
-			an.SetInteger ("fightState", fightState); // sets shoot animation
+        for (int i = 0; i < memberNum; i++)
+        {
+            an[i].SetInteger("fightState", fightState); // sets shoot animation
+        }
 			ammunition [0].transform.position = transform.position + new Vector3 (bulletOffset.x * k, bulletOffset.y, 0); // puts ammo to fighter's position
 			if (k == 1) { // if fighter shoots right
 				ammunition [0].transform.rotation = Quaternion.Euler (transform.rotation.x, 0, transform.rotation.z); // rotates ammo right
@@ -548,7 +652,17 @@ public class fighterScript : MonoBehaviour {
 	void die () // due
 	{
 		demobilized = true;
-		an.SetBool ("dead", true);
+        if (memberNum<=0)
+        {
+            anEnemy.SetBool("dead", true);
+        }
+        else
+        {
+            for (int i = 0; i < memberNum; i++)
+            {
+                an[i].SetBool("dead", true);
+            }
+        }
 		dead = true;
 		if (gameObject.layer == 8 && gpm.pc.Contains(gameObject)) 
 		{

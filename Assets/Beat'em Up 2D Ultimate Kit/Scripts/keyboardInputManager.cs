@@ -62,5 +62,4 @@ public class keyboardInputManager : MonoBehaviour {
 		speed = fighter.speed;
 		rb = newPlayer.GetComponent<Rigidbody2D>();
 	}
-
 }

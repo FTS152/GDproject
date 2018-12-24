@@ -5,7 +5,8 @@ using System.Collections.Generic;
 
 public class GamePlayManager : MonoBehaviour {
 
-	[Tooltip("playable characters")] public GameObject[] playableCharacters;
+    [Tooltip("playable characters")] public GameObject playableTeam;
+    [Tooltip("playable characters")] public GameObject[] playableCharacters;
 	[Tooltip("Score UI board")] public GameObject scoreTable;
 	[Tooltip("Health bar")] public GameObject healthBar;
 	[Tooltip("next level UI button")] public GameObject nextLevelButton;
@@ -45,25 +46,24 @@ public class GamePlayManager : MonoBehaviour {
 		aus = GetComponent<AudioSource> ();
 		prepareLayers ();
 		pc = new List<GameObject> ();
-		for (int i = 0; i < playableCharacters.Length; i++) {
-			if (playableCharacters [i] != null) {
-				pc.Add (playableCharacters [i]);
-			}
+
+        if (playableTeam != null) {
+			pc.Add (playableTeam);
 		}
+
 		if (Application.levelCount - 1 == Application.loadedLevel) {
 			Destroy (nextLevelButton);
 		}
-
-		int characterNum = PlayerPrefs.GetInt ("characterNum", 0);
+        
 		for (int i = 0; i < inputManagers.Length; i++) {
-			inputManagers [i].SendMessage ("selectPlayer", playableCharacters [characterNum]); // change fighter in input managers
+			inputManagers [i].SendMessage ("selectPlayer", playableTeam); // change fighter in input managers
 		} 
-		Camera.main.GetComponent<cameraBehaviour> ().changePlayer (playableCharacters [characterNum]); //
-		playableCharacters[characterNum].GetComponent<fighterScript>().isMainCharacter = true;
-		pc [characterNum].GetComponent<fighterScript> ().getUnderControl (healthBar);
-		GameObject.Find ("CutsceneManager").GetComponent<CutsceneManager>().player = playableCharacters [characterNum];
+		Camera.main.GetComponent<cameraBehaviour> ().changePlayer (playableTeam); //
+		playableTeam.GetComponent<fighterScript>().isMainCharacter = true;
+		pc [0].GetComponent<fighterScript> ().getUnderControl (healthBar);
+		GameObject.Find ("CutsceneManager").GetComponent<CutsceneManager>().player = playableTeam;
 
-		refreshScoreTable ();
+        refreshScoreTable();
 	}
 
 	IEnumerator displayIntroText () // displays intro text
@@ -90,6 +90,7 @@ public class GamePlayManager : MonoBehaviour {
 
 	void prepareLayers ()
 	{
+        //TODO Layer Collision Fixed
 		Physics2D.IgnoreLayerCollision (8, 12);
 		Physics2D.IgnoreLayerCollision (9, 12);
 		Physics2D.IgnoreLayerCollision (8, 13);
