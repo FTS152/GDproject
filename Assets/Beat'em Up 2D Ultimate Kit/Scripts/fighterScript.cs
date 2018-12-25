@@ -7,7 +7,7 @@ public class fighterScript : MonoBehaviour {
 
 	[Space(20)]
 	[Header("Fighter settings")]
-
+    
     [Tooltip("Number of member")] public int memberNum;
     [Tooltip("member of player team")] public GameObject[] member;
 	[Tooltip("health points at the start")] public float health;
@@ -51,6 +51,9 @@ public class fighterScript : MonoBehaviour {
 	[Tooltip("reference to a hitbox")]public Animator hitbox;
     [Tooltip("reference to a hitbox1")] public Animator hitbox1;
     [Tooltip("reference to a hitbox2")] public Animator hitbox2;
+    [Tooltip("reference to a hitbox3")] public Animator hitbox3;
+    [Tooltip("reference to a hitbox4")] public Animator hitbox4;
+    [Tooltip("reference to a hitbox5")] public Animator hitbox5;
 
 
     [HideInInspector] public bool underControl; // shows if player is controling this fighter
@@ -177,15 +180,14 @@ public class fighterScript : MonoBehaviour {
 						hitbox.SetInteger ("movingState", 0);
                         hitbox1.SetInteger("movingState", 0);
                         hitbox2.SetInteger("movingState", 0);
+                        hitbox3.SetInteger("movingState", 0);
+                        hitbox4.SetInteger("movingState", 0);
+                        hitbox5.SetInteger("movingState", 0);
                     }
 
 					CancelInvoke ("run"); // disables invoking run animation
 					invoked = false;
 				} else { // if fighter is moving
-                    if (true)
-                    {
-                        //Debug.Log("!!!!!!");
-                    }
 					if (!invoked) { // checks if invoke is not called yet
                         if (memberNum<=0)
                         {
@@ -202,6 +204,9 @@ public class fighterScript : MonoBehaviour {
 							hitbox.SetInteger ("movingState", 1);
                             hitbox1.SetInteger("movingState", 1);
                             hitbox2.SetInteger("movingState", 1);
+                            hitbox3.SetInteger("movingState", 1);
+                            hitbox4.SetInteger("movingState", 1);
+                            hitbox5.SetInteger("movingState", 1);
                         }
 						Invoke ("run", timeBeforeRun); // invokes run animation
 						invoked = true;
@@ -217,7 +222,7 @@ public class fighterScript : MonoBehaviour {
                 }
                 else
                 {
-                    for (int i = 0; i < member.Length; i++)
+                    for (int i = 0; i < memberNum; i++)
                     {
                         member[i].transform.rotation = Quaternion.Euler(transform.rotation.x, -180, transform.rotation.z);// rotates gameObject to left
                     }
@@ -230,7 +235,7 @@ public class fighterScript : MonoBehaviour {
                 }
                 else
                 {
-                    for (int i = 0; i < member.Length; i++)
+                    for (int i = 0; i < memberNum; i++)
                     {
                         member[i].transform.rotation = Quaternion.Euler(transform.rotation.x, 0, transform.rotation.z);// rotates gameObject to right
                     }
@@ -516,29 +521,47 @@ public class fighterScript : MonoBehaviour {
                 an[i].SetInteger("fightState", randomHit); // enables proper hit animation
             }
         }
-		if(hitbox != null){
-			hitbox.SetInteger ("movingState", 4);
-			hitbox.SetInteger ("fightState", randomHit); // enables proper hit animation
-            hitbox1.SetInteger("movingState", 4);
-            hitbox1.SetInteger("fightState", randomHit); // enables proper hit animation
-            hitbox2.SetInteger("movingState", 4);
-            hitbox2.SetInteger("fightState", randomHit); // enables proper hit animation
+		if(memberNum>0){
+            if (k > 0)
+            {
+                hitbox.SetInteger("movingState", 4);
+                hitbox.SetInteger("fightState", randomHit); // enables proper hit animation
+                hitbox1.SetInteger("movingState", 4);
+                hitbox1.SetInteger("fightState", randomHit); // enables proper hit animation
+                hitbox2.SetInteger("movingState", 4);
+                hitbox2.SetInteger("fightState", randomHit); // enables proper hit animation
+            }
+            else
+            {
+                hitbox3.SetInteger("movingState", 4);
+                hitbox3.SetInteger("fightState", randomHit); // enables proper hit animation
+                hitbox4.SetInteger("movingState", 4);
+                hitbox4.SetInteger("fightState", randomHit); // enables proper hit animation
+                hitbox5.SetInteger("movingState", 4);
+                hitbox5.SetInteger("fightState", randomHit); // enables proper hit animation
+            }
+            
         }
 
-		RaycastHit2D[] enemies = Physics2D.RaycastAll(transform.position + center + new Vector3 (hitRaycastOffset.x * k, hitRaycastOffset.y, 0), Vector2.up, hitRaycastLenght, enemyLayer); // checks for a receiver of a punch
+        Collider2D[] enemies = Physics2D.OverlapCircleAll(transform.position + center, hitRaycastLenght, enemyLayer);
+        //RaycastHit2D[] enemies = Physics2D.RaycastAll(transform.position + center + new Vector3 (hitRaycastOffset.x * k, hitRaycastOffset.y, 0), Vector2.up, hitRaycastLenght, enemyLayer); // checks for a receiver of a punch
 		if (enemies.Length > 0) // if there are receivers of a punch
 		{
 			for (int i = 0; i < enemies.Length; i++) 
 			{
-				bool superPunch = chanceOfSuperPunch > Random.Range(0, 100) ? true:false; // randomly decides if make super punch
-				enemies[i].transform.gameObject.GetComponent<fighterScript>().getAttacked(true, damage, superPunch, k, hitDirection); // sends attack information to a receiver
-				if (superPunch) 
-				{
-					au.PlayOneShot (sounds[1]);
-				} else 
-				{
-					au.PlayOneShot (sounds[0]);
-				}
+                if ((enemies[i].transform.position.x - transform.position.x) / k > 0)
+                {
+                    bool superPunch = chanceOfSuperPunch > Random.Range(0, 100) ? true : false; // randomly decides if make super punch
+                    enemies[i].transform.gameObject.GetComponent<fighterScript>().getAttacked(true, damage, superPunch, k, hitDirection); // sends attack information to a receiver
+                    if (superPunch)
+                    {
+                        au.PlayOneShot(sounds[1]);
+                    }
+                    else
+                    {
+                        au.PlayOneShot(sounds[0]);
+                    }
+                }
 			}
 		}
 
