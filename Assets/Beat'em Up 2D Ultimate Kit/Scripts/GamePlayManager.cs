@@ -14,7 +14,9 @@ public class GamePlayManager : MonoBehaviour {
 	[Tooltip("message UI board")] public GameObject messageBar;
 	[Tooltip("into text messages array")] public string[] introText;
 	[Tooltip("how long will intro messages would be displayed")] public float showTextTime;
-	public string failText;
+    [Tooltip("Win Panel")] public GameObject winPanel;
+    [Tooltip("Lose Panel")] public GameObject losePanel;
+    public string failText;
 	public string winText;
 	[Tooltip("audio clips")] public AudioClip[] audioClips;
 	// 0 - fail
@@ -106,6 +108,10 @@ public class GamePlayManager : MonoBehaviour {
 	public void applyScore(float plusScore) // plus score points
 	{
 		score += plusScore; // pluses score points
+        if (score >= 19)
+        {
+            Invoke("win", 1);
+        }
 		scoreTable.GetComponent<Text>().text = "Score: " + score; // refreshes score board
 		if (PlayerPrefs.GetFloat ("score") < score) // if new score is a record
 		{
@@ -125,14 +131,21 @@ public class GamePlayManager : MonoBehaviour {
 
 	public void win () 
 	{
-		displayText (winText, showTextTime);
-		gm.win ();
+        //displayText (winText, showTextTime);
+        winPanel.SetActive(true);
+        gm.win ();
 		aus.PlayOneShot (audioClips[1]); // plays score audio
 	}
 
+    public void lose()
+    {
+        Invoke("fail", 1);
+    }
+
 	public void fail() // fail
 	{
-		displayText (failText, showTextTime);
+        //displayText (failText, showTextTime);
+        losePanel.SetActive(true);
 		gm.fail ();
 		aus.PlayOneShot (audioClips[0]); // plays score audio
 	}
@@ -147,7 +160,7 @@ public class GamePlayManager : MonoBehaviour {
 
 	public void applyDeath (GameObject dead) {
 		if (dead.GetComponent<fighterScript> ().isMainCharacter) {
-			fail ();
+			lose ();
 		} else if (dead.layer == 9) {
 			enemiesKilled++;
 			applyScore (dead.GetComponent<fighterScript>().scoreForKilling);

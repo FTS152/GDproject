@@ -92,14 +92,14 @@ public class GameManager: MonoBehaviour {
 
     public void fail () // fail
     {
-        openInGameMenu(); // opens in game menu
+        //openInGameMenu(); // opens in game menu
 		inGameMenuButton.SetActive(false); // we disable menu button to prevent the opportunity to continue the game with dead main character
     }
 
 	public void win () // finish
 	{
 		stop ();
-		openInGameMenu();
+		//openInGameMenu();
 		inGameMenuButton.SetActive(false); // we disable menu button to prevent the opportunity to continue the game with dead main character
 	}
 

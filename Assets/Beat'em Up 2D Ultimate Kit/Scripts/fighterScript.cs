@@ -692,7 +692,7 @@ public class fighterScript : MonoBehaviour {
 			gpm.pc.Remove(gameObject);
 			if (gpm.pc.Count == 0) // checks if it is the last playable fighter
 			{
-				gpm.fail ();
+				gpm.lose ();
 			} else 
 			{
 				gpm.changePlayer();
