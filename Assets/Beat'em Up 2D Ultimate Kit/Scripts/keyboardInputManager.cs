@@ -50,10 +50,10 @@ public class keyboardInputManager : MonoBehaviour {
 		{
 			fighter.checkForUsableObjects ();
 		}
-		if (Input.GetKeyDown (KeyCode.F))
+		/*if (Input.GetKeyDown (KeyCode.F))
 		{
 			fighter.StartCoroutine ("block");
-		}
+		}*/
 	}
 
 	public void selectPlayer(GameObject newPlayer) 

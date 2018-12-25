@@ -656,7 +656,11 @@ public class fighterScript : MonoBehaviour {
 
 	public void applyHealth (float plusHealth) // adds plusHealth to health (can be negative)
 	{
-		health += plusHealth;
+        health += plusHealth;
+        if (memberNum > 0 && health > 100)
+        {
+            health = 100;
+        }
 		if (health <= 0) // if health is 0 or less
 		{
 			die(); // die

@@ -9,6 +9,7 @@ public class cardUIScript : MonoBehaviour
     public float totalTime;//总时间
     private Image cdImage;//Button控件的子控件，它的亮度调低一些，作为CD倒计时时候的等待效果图
     private Button cdButton;//button控件，把子控件Text删了
+    private GameObject skillManager;
     // Use this for initialization
     void Start()
     {
@@ -37,6 +38,11 @@ public class cardUIScript : MonoBehaviour
         leftTime = totalTime;//剩余时间恢复
         cdButton.interactable = false;//button不可按
         cdImage.fillAmount = 1;//fillAmount重置为1
+    }
+    public void useSkill(int i)
+    {
+        skillManager = GameObject.FindWithTag("skillManager");
+        skillManager.GetComponent<skillManager>().useSkill(i);
     }
 }
 /*--------------------- 
