@@ -102,6 +102,9 @@
     <Compile Include="Assets\Beat'em Up 2D Ultimate Kit\UI\Scripts\CameraBehaviour.cs" />
     <Compile Include="Assets\Beat'em Up 2D Ultimate Kit\UI\Scripts\CameraContainerScript.cs" />
     <Compile Include="Assets\Beat'em Up 2D Ultimate Kit\UI\Scripts\UIAnimator.cs" />
+    <Compile Include="Assets\cardUIScript.cs" />
+    <Compile Include="Assets\charSelectManagerScript.cs" />
+    <Compile Include="Assets\teamScript.cs" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>C:/Users/kind/Documents/GDproject/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>

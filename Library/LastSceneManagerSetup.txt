@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Beat'em Up 2D Ultimate Kit/Scenes/level_1.unity
+- path: Assets/Beat'em Up 2D Ultimate Kit/Scenes/charCheck.unity
   isLoaded: 1
   isActive: 1
